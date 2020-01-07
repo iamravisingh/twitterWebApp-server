@@ -1,0 +1,7 @@
+//- extends layout
+
+block content
+    if user
+        p hello #{user.name}
+    else
+    a(href='/twitter/login') login using twitter
