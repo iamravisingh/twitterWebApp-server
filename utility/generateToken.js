@@ -1,4 +1,5 @@
 const request = require('request');
+const constant = require('../config/constant')
 
 module.exports = {
     generateTwitterToken(apiKey,secretKey) {
@@ -7,7 +8,7 @@ module.exports = {
         const credentials_base64Key = new Buffer(credentials).toString('base64')
         console.log('key >>>>>>>>>',arguments,credentials,credentials_base64Key);
             request.post({
-                url: 'https://api.twitter.com/oauth2/token',
+                url: constant.TWITTER_OAUTH2_TOKEN,
                 headers: {
                   'Authorization': `Basic ${credentials_base64Key}`,
                   'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'

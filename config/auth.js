@@ -5,7 +5,7 @@ module.exports = {
         consumer_secret   : 'RoWrw4NAgj1eTzM1wR4Ee9gwmG0kQKC7HgBAi6U9pxa5SSreGZ',
         // consumerKey      : 'u5h3Mu4EVEOeatsJCdkAWb2ip',
         // consumerSecret   : 'tnRS7uqqV94EiyJOisxG9lnMYXOL5DzdysuhSsY7p69I6HVKGE',
-        callbackURL      : "http://localhost:8080",
+        callbackURL      : "http://localhost:8080/home",
         access_token        : "880716583450161152-tV3u67QIBSfxrRCESRuvwxU9GnVYsKq",
         access_token_secret  : "PMpKpqBG6tsyfCnZnbWNKbq6ckWoxgPl2fdrLKpQkCCeW"
     },

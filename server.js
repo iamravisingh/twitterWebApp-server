@@ -4,46 +4,30 @@ const twitConfig = require('./config/auth').twitterAuth;
 const passport = require('passport');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+require('./routes/oAuth')(passport);
+
 
 // Create a new Express application.
 const app = express();
-// require('./routes/')(app);
+
+
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
 app.use(require('cookie-parser')());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
-//initialize passport strategy for twitter login.
-passport.use(new TwitterStrategy({
-    consumerKey: twitConfig.consumer_key,
-    consumerSecret: twitConfig.consumer_secret,
-    callbackURL: twitConfig.callbackURL
-}, (token, tokenSecret, profile, done) => {
-        console.log('arguments in passport.use>>>>>>>>>>>>>>>', arguments);
-        console.log('profile in twitterStrategy>>>>>>>>>>>>>', profile,callback);
-        process.nextTick(() => {
-            if (err) {
-                console.log('err in passport TwitterStrategy>>>>>>>>>>>',err)
-                return callback()
-            } else {
-                console.log('inside the else condition no error found>>>>>>>>>>',profile)
-            }
-
-        })
-    return done(null, profile);
-}));
-
-passport.serializeUser(function(user, callback) {
-    console.log('arguments in serializeUser passport.use>>>>>>>>>>>>>>>', arguments);
-    callback(null, user);
-})
-
-passport.deserializeUser(function (obj, callback) {
-    console.log('arguments in deserializeUser passport.use>>>>>>>>>>>>>>>', arguments);
-    callback(null, obj);
-});
+require('./routes/token');
+require('./routes/twitterApi')(app);
 
 app.use(passport.initialize());
 app.use(passport.session({
@@ -52,31 +36,28 @@ app.use(passport.session({
 }));
 
 
+app.get('/', function (req, res,next) {
+    console.log('user in />>>>>>>>>>>>>>', req.user);
+    res.render('index', { user: req.user })
+    next();
+})
+
+app.get('/twitter/login', passport.authenticate('twitter'));
+
+app.get('/twitter/return', passport.authenticate('twitter', { successRedirect : 'http://localhost:8080/home',failureRedirect: '/twitter/login' }),(req, res,next) => {
+    console.log('inside the return failure');
+    res.send('http://localhost:8080/home');
+    next();
+})
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-//load the routes 
-app.use(require('./routes/twitterApi'));
-app.use(require('./routes/token'));
 
-
-
-app.get('/', function (req, res) {
-    console.log('user in />>>>>>>>>>>>>>', req);
-    res.render('index', {user: req.user})
-})
-
-
-app.get('/twitter/login', passport.authenticate('twitter'), (req, res) => {
-    console.log('consoe.log req>>>>>>>>>>>>>', req);
-    console.log('res >>>>>>>>>>',res);
-});
-
-app.get('/twitter/return', passport.authenticate('twitter', { successRedirect : 'http://localhost:8080',failureRedirect: '/' }), function (req, res) {
-    console.log('inside the return failure');
-    res.redirect('http://localhost:8080/');
-})
+app.use(cors);
+// load the routes 
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT || 9000, () => {
