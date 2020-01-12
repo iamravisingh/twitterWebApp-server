@@ -33,8 +33,9 @@ app.get(constant.USER_TIMELINE_URL, function (request, response) {
     })
 
 app.get(constant.USER_HOME_TIMELINE_URL, function (request, response) {
+        const screen_name = request.params.screen_name;
         console.log('screen_name>>>>>>>>>', screen_name);
-        T.get(constant.TWITTER_HOME_TIMELINE, {}, (err, res) => {
+        T.get(constant.TWITTER_HOME_TIMELINE, { screen_name }, (err, res) => {
             console.log('arguments in user_timeline >>>>>>>>>>>>', err, res)
             if (err) {
                 return response.send(err);
@@ -42,11 +43,12 @@ app.get(constant.USER_HOME_TIMELINE_URL, function (request, response) {
             console.log('Authentication successful. Running bot...\r\n')
             return response.send(res);
         })
-    })
+})
+    
 
 app.post(constant.USER_TWEET_URL, (request, response)  => {
     console.log('statuses/update>>>>>>>>>>>>', request.body)
-        T.post(constant.TWITTER_STATUS_TWEET, request.body, (err, res) => {
+        T.post(constant.TWITTER_STATUS_TWEET, {"status" : request.body.status}, (err, res) => {
             console.log('arguments in user_timeline >>>>>>>>>>>>', err, res)
             if (err) {
                 return response.send(err);
@@ -95,7 +97,7 @@ app.post(constant.USER_DIRECT_MSG_URL, (request, response) => {
 app.post(constant.USER_RETWEET_URL, (request, response) => {
         // console.log('access_token >>>>>>>>>>>>', request)
         const payload = {
-            id: request.body.tweet_id,
+            id: request.body.id,
         }
 
         console.log('access_tokenPayload>>>>>>>>>>>', payload);
@@ -103,7 +105,7 @@ app.post(constant.USER_RETWEET_URL, (request, response) => {
             console.log('arguments in user_timeline >>>>>>>>>>>>', err, res)
             if (err) {
                 return response.send(err);
-            }
+            }   
             console.log('Authentication successful. Running bot...\r\n')
             return response.send(res);
         })

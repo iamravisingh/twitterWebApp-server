@@ -2,6 +2,8 @@
 const TwitterStrategy = require('passport-twitter').Strategy;
 const twitConfig = require('../config/auth').twitterAuth;
 const passport = require('passport');
+const express = require('express');
+const app = express();
 
 module.exports = (passport) => {
     passport.use(new TwitterStrategy({
@@ -10,19 +12,14 @@ module.exports = (passport) => {
         consumerSecret: twitConfig.consumer_secret,
         callbackURL: twitConfig.callbackURL
     }, (token, tokenSecret, profile, callback) => {
-        console.log('arguments in passport.use>>>>>>>>>>>>>>>', arguments);
-        console.log('profile in twitterStrategy>>>>>>>>>>>>>', profile, callback);
-        process.nextTick(() => {
-            if (err) {
-                console.log('err in passport TwitterStrategy>>>>>>>>>>>', err)
-                return callback()
-            } else {
-                console.log('inside the else condition no error found>>>>>>>>>>', profile)
-            }
-    
-        })
-        return callback(null, profile);
+        // console.log('arguments in passport.use>>>>>>>>>>>>>>>', arguments);
+        // console.log('profile in twitterStrategy>>>>>>>>>>>>>', profile, callback);
+        // console.log('inside the else condition no error found>>>>>>>>>>', profile);
+        global.twitterUser = profile;
+        console.log('global.twitterUser>>>>>>>>>>>>>>>>>>',global.twitterUser)
+        return callback(null,profile)
     }));
+
 
     passport.serializeUser(function (user, callback) {
         console.log('arguments in serializeUser passport.use>>>>>>>>>>>>>>>', arguments);

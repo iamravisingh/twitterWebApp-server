@@ -6,7 +6,7 @@ const constants = {
     TWITTER_HOME_TIMELINE       : '/statuses/home_timeline',
     TWITTER_STATUS_TWEET        : '/statuses/update',
     TWITTER_ACCESS_TOKEN        : '/access_token',
-    TWITTER_DIRECTDM_MSG        : 'direct_messages/events/new',
+    TWITTER_DIRECTDM_MSG        : 'direct_messages/new',
     TWITTER_DIRECTMESSAGE       : '/direct_messages/',
     TWITTER_RETWEET             : `/statuses/retweet/:id`,
     TWITTER_OAUTH2_TOKEN        : 'https://api.twitter.com/oauth2/token',
@@ -14,7 +14,7 @@ const constants = {
     // local endpoint
     USER_VERIFY_CREDENTIALS  : "/verify_Usercredentials",
     USER_TIMELINE_URL        : '/user_timeline/:screen_name',
-    USER_HOME_TIMELINE_URL   : '/home_timeline',
+    USER_HOME_TIMELINE_URL   : '/home_timeline/:screen_name',
     USER_TWEET_URL           : '/statusUpdate',
     USER_ACCESS_TOKEN_URL    : '/access_token',
     USER_DIRECT_MSG_URL      : '/newMessage',
